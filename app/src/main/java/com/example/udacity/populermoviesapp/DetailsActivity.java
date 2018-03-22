@@ -35,8 +35,7 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         TheMovie movieToShow = intent.getParcelableExtra("movie");
         //Setting texts on the details view for a selected movie
-        String deneme = movieToShow.getOverview() + movieToShow.getOverview() + movieToShow.getOverview();
-        overviewText.setText(deneme);
+        overviewText.setText(movieToShow.getOverview());
         releaseDateText.setText(movieToShow.getReleaseDate());
         //loading images in to image view with picasso
         Picasso.with(this)

@@ -55,15 +55,17 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         //gridView = findViewById(R.id.grid_view_tv);
         ButterKnife.bind(this);
+        //default value in shared preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String defaultValue = sharedPreferences.getString("userKey", "1");
         //no internet connection has been found.
         if(!isNetworkConnected()){
             showMessageOnError();//showing message to the user
         } else {
             if(savedInstanceState == null) { //if program first time running.
                 //initialization of Array lists results from movie database and image URL's
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-                String defaultValue = sharedPreferences.getString("userKey", "1");
                 //Log.d(TAG, defaultValue);
+                //initConnection(getString(R.string.default_movie_sort_order));
                 initConnection(defaultValue);
             }
         }
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements
         //imgDimension = (int) width/2;
         //Log.d(TAG," columns: " + columns);
         //gridView.setNumColumns(columns);
-        CustomArrayAdapter customArrayAdapter = new CustomArrayAdapter(this, imageLinks, 200);
+        CustomArrayAdapter customArrayAdapter = new CustomArrayAdapter(this, imageLinks);
         gridView.setAdapter(customArrayAdapter);
     }
 

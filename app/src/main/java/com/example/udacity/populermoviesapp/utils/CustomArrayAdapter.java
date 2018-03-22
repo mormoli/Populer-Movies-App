@@ -23,17 +23,11 @@ public class CustomArrayAdapter extends BaseAdapter{
     private Context context;
     private ArrayList<String> posterImageLinks;
 
-    private int imgDimension;
-
     //constructor
-    public CustomArrayAdapter(Context context, ArrayList<String> imgLinks, int imgDimension){
+    public CustomArrayAdapter(Context context, ArrayList<String> imgLinks){
         this.context = context;
         this.posterImageLinks = imgLinks;
-        this.imgDimension = imgDimension;
-    }
-
-    public void setImgDimension(int imgDimension) {
-        this.imgDimension = imgDimension;
+        //this.imgDimension = imgDimension;
     }
 
     @Override
@@ -53,12 +47,14 @@ public class CustomArrayAdapter extends BaseAdapter{
     @SuppressWarnings("ConstantConditions")
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder viewHolder = null;
+        ViewHolder viewHolder;
         // If this is a new View object we're getting, then inflate the layout.
         // If not, this view already has the layout inflated from a previous call to getView,
         // and we modify the View widgets as usual.
         if(view == null){
+            //Log.d(TAG, "view initialization");
             view = LayoutInflater.from(context).inflate(R.layout.image_item, viewGroup, false);
+            //ButterKnife.bind(this, view);
         }
         viewHolder = new ViewHolder(view);
         //viewHolder.imageView = view.findViewById(R.id.image_view_tv);
@@ -79,7 +75,7 @@ public class CustomArrayAdapter extends BaseAdapter{
     class ViewHolder{
         @BindView(R.id.image_view_tv)
         ImageView imageView;
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
