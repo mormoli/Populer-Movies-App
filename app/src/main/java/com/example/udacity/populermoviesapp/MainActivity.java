@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
         //default value in shared preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultValue = sharedPreferences.getString("userKey", "DEFAULT");
+        String defaultValue = sharedPreferences.getString("userKey", getString(R.string.default_movie_sort_order));
         //no internet connection has been found.
         if(!isNetworkConnected()){
             showMessageOnError();//showing message to the user
