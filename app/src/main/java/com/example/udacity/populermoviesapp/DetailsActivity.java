@@ -7,8 +7,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.udacity.populermoviesapp.model.TheMovie;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +38,7 @@ public class DetailsActivity extends AppCompatActivity {
         overviewText.setText(movieToShow.getOverview());
         releaseDateText.setText(movieToShow.getReleaseDate());
         //loading images in to image view with picasso
-        Glide.with(this)
+        Picasso.get()
                 .load(movieToShow.getPosterPath())
                 .into(posterImage);
         originalTitle.setText(movieToShow.getOriginalTitle());

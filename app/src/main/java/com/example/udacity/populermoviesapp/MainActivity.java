@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements
                         //Log.d(TAG, t.getBackdropPath());
                     } else {
                         imageLinks.add(t.getPosterPath());
-                        Log.d(TAG, t.getPosterPath());
+                        //Log.d(TAG, t.getPosterPath());
                     }
                 }
                 populateUI();
