@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
         //default value in shared preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultValue = sharedPreferences.getString("userKey", "1");
+        String defaultValue = sharedPreferences.getString("userKey", "DEFAULT");
         //no internet connection has been found.
         if(!isNetworkConnected()){
             showMessageOnError();//showing message to the user
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements
                         //Log.d(TAG, t.getBackdropPath());
                     } else {
                         imageLinks.add(t.getPosterPath());
-                        //Log.d(TAG, t.getPosterPath());
+                        Log.d(TAG, t.getPosterPath());
                     }
                 }
                 populateUI();
