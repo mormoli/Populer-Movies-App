@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.example.udacity.populermoviesapp.DetailsActivity">
+        <!-- below to do is note to myself -->
+        <!-- TODO for margin or padding create/use dimension xml instead of hardcoded values!-->
+        <TextView
+            android:id="@+id/original_title_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/textview_label"
+            android:textAlignment="center"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/poster_image_tv"
+            android:layout_width="185dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/image_description"
+            app:layout_constraintStart_toStartOf="@+id/original_title_label"
+            app:layout_constraintTop_toBottomOf="@+id/original_title_label"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/vote_avarage_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/vote_avarage_label"
+            android:textAlignment="viewStart"
+            android:gravity="start"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/poster_image_tv"
+            app:layout_constraintTop_toTopOf="@+id/poster_image_tv" />
+
+        <TextView
+            android:id="@+id/vote_avarage_tv"
+            android:layout_width="180dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="start"
+            android:text="@string/textview_tv"
+            android:textAlignment="viewStart"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.096"
+            app:layout_constraintStart_toEndOf="@+id/vote_avarage_label"
+            app:layout_constraintTop_toTopOf="@+id/poster_image_tv" />
+
+        <TextView
+            android:id="@+id/release_date_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="28dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/release_date_label"
+            android:textAlignment="viewStart"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/poster_image_tv"
+            app:layout_constraintTop_toBottomOf="@+id/vote_avarage_label" />
+
+        <TextView
+            android:id="@+id/release_date_tv"
+            android:layout_width="180dp"
+            android:layout_height="23dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:gravity="start"
+            android:text="@string/textview_tv"
+            android:textAlignment="viewStart"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.13"
+            app:layout_constraintStart_toEndOf="@+id/release_date_label"
+            app:layout_constraintTop_toBottomOf="@+id/vote_avarage_tv" />
+
+        <TextView
+            android:id="@+id/overview_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="20dp"
+            android:gravity="start"
+            android:text="@string/overview_label"
+            android:textAlignment="viewStart"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@+id/release_date_tv"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/release_date_label"
+            app:layout_constraintTop_toBottomOf="@+id/release_date_label" />
+
+        <TextView
+            android:id="@+id/overview_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/textview_tv"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/overview_label"
+            app:layout_constraintTop_toBottomOf="@+id/overview_label"
+            app:layout_constraintVertical_bias="0.021" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.01" />
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
