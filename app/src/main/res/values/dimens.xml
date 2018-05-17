@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- space for layout elements -->
+    <dimen name="individual_spacing_zero">0dp</dimen>
+    <dimen name="margin_general_space">8dp</dimen>
+    <dimen name="margin_bigger_space">16dp</dimen>
+    <dimen name="top_alignment_space">20dp</dimen>
+    <!-- Text sizes -->
+    <dimen name="text_header_size">22sp</dimen>
+    <dimen name="text_normal_size">14sp</dimen>
+    <!-- image width and height -->
+    <dimen name="original_image_width">185dp</dimen>
+    <dimen name="original_image_height">278dp</dimen>
+</resources>

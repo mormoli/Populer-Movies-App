@@ -2,13 +2,11 @@ package com.example.udacity.populermoviesapp.utils;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.example.udacity.populermoviesapp.R;
 import com.squareup.picasso.Picasso;
@@ -67,6 +65,8 @@ public class CustomArrayAdapter extends BaseAdapter{
         //loading images in to image view with picasso
         Picasso.get()
                 .load(posterImageLinks.get(i))
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error)
                 .into(viewHolder.imageView);
         //Log.d(TAG,posterImageLinks.get(i));
         return view;

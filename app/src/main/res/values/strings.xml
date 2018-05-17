@@ -1,18 +1,28 @@
 <resources>
     <string name="app_name">PopulerMoviesApp</string>
     <string name="no_connection_error">No internet connection found! Please connect to the internet.</string>
+    <string name="empty_favorite_list_error">No Favorite movie found! Please use button Make as Favorite to save movie.</string>
+    <string name="movie_added_message"> added to favorite list.</string>
+    <string name="movie_removed_message"> removed from favorite list.</string>
     <string name="default_movie_sort_order">popular</string>
     <string name="image_description">Movie Poster</string>
     <string name="textview_label">Label</string>
     <string name="textview_tv">Content</string>
     <string name="release_date_label">Release Date :</string>
     <string name="vote_avarage_label">Rating :</string>
+    <string name="trailers_label">Trailers</string>
+    <string name="reviews_label">Reviews</string>
+    <string name="sql_exception">Failed to insert row into: </string>
+    <string name="content_authority">com.example.udacity.populermoviesapp.app</string>
+
+    <string name="favorite_button">MAKE AS FAVORITE</string>
+    <string name="remove_favorite_button">REMOVE FROM FAVORITE</string>
 
     <string name="overview_label">Overview :</string>
 
     <string name="action_settings">Settings</string>
 
-    <string name="api_key">YOUR API KEY HERE</string>
+    <string name="api_key">Your api key here!</string>
 
     <!-- - - - - - - - - - - -->
     <!--Used by Preferences  -->
@@ -27,6 +37,9 @@
     <!-- Label for sort by popular movies preference [CHAR LIMIT=25] -->
     <string name="pref_user_top_label">By User Rating</string>
 
+    <!-- Label for sort by popular movies preference [CHAR LIMIT=25] -->
+    <string name="pref_user_favorites_label">By Favorites</string>
+
     <!-- Key name for user sort preference in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_user_key" translatable="false">userKey</string>
 
@@ -35,5 +48,8 @@
 
     <!-- Value in SharedPreferences for top rated sort option [CHAR LIMIT=NONE] -->
     <string name="pref_user_top" translatable="false">top</string>
+
+    <!-- Value in SharedPreferences for top rated sort option [CHAR LIMIT=NONE] -->
+    <string name="pref_user_favorites" translatable="false">favorites</string>
 
 </resources>

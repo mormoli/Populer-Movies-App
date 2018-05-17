@@ -55,7 +55,8 @@ public class TheMovie implements Parcelable {
     @SerializedName("release_date")
     private String releaseDate;
     //private List<Integer> genreIds;
-    //private int id;
+    @SerializedName("id")
+    private int id;
     @SerializedName("original_title")
     private String originalTitle;
     //private String originalLanguage;
@@ -129,13 +130,13 @@ public class TheMovie implements Parcelable {
         this.genreIds = genreIds;
     }*/
 
-    /*public int getId() {
+    public int getId() {
         return id;
-    }*/
+    }
 
-    /*public void setId(int id) {
+    public void setId(int id) {
         this.id = id;
-    }*/
+    }
 
     public String getOriginalTitle() {
         return originalTitle;
@@ -211,7 +212,7 @@ public class TheMovie implements Parcelable {
         //unchecked array list to serializable object
         //this.genreIds = new ArrayList<>();
         //in.readList(genreIds, null);
-        //this.id = in.readInt();
+        this.id = in.readInt();
         this.originalTitle = in.readString();
         //this.originalLanguage = in.readString();
         //this.title = in.readString();
@@ -234,7 +235,7 @@ public class TheMovie implements Parcelable {
         parcel.writeString(this.releaseDate);
         parcel.writeString(this.posterPath);
         //parcel.writeList(this.genreIds);
-        //parcel.writeInt(this.id);
+        parcel.writeInt(this.id);
         parcel.writeString(this.originalTitle);
         //parcel.writeString(this.originalLanguage);
         //parcel.writeString(this.title);
@@ -251,6 +252,7 @@ public class TheMovie implements Parcelable {
                 "posterPath='" + posterPath + '\n' +
                 ", overview='" + overview + '\n' +
                 ", releaseDate='" + releaseDate + '\n' +
+                ", id='" + id + '\n' +
                 ", originalTitle='" + originalTitle + '\n' +
                 ", backdropPath='" + backdropPath + '\n' +
                 ", voteAvarage=" + voteAvarage + '\n' +
