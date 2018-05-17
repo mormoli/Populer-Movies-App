@@ -10,7 +10,7 @@ com.jakewharton:butterknife:{Latest:Version} <br />
 com.jakewharton:butterknife-compiler:{Latest:Version} <br />
 <br />
 <br />
-## For the sake of simplicty API KEY stored in res/values/strings.xml
+##### For the sake of simplicty API KEY stored in res/values/strings.xml
 whoever this is not safe or recommended way to store api keys.<br /> 
 [read here](https://stackoverflow.com/questions/14570989/best-practice-for-storing-and-protecting-private-api-keys-in-applications)
 
