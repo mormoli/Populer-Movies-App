@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener{
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public final static String LIST_STATE_KEY = "gridview_list_state";
-    Parcelable listState;
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
     //Array List to save results from the movie database
     private ArrayList<TheMovie> theMovies = new ArrayList<>();
