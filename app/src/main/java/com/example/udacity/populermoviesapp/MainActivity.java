@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Parcelable;
 import android.support.v4.graphics.BitmapCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener{
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    public final static String LIST_STATE_KEY = "gridview_list_state";
+    Parcelable listState;
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
     //Array List to save results from the movie database
     private ArrayList<TheMovie> theMovies = new ArrayList<>();
@@ -59,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements
     //grid view initialization
     @BindView(R.id.grid_view_tv)
     GridView gridView;
+    //scroll position
+    private int index = 0;
 
     //private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
     @SuppressWarnings("ConstantConditions")
@@ -69,10 +74,10 @@ public class MainActivity extends AppCompatActivity implements
         // Stetho is a tool created by facebook to view your database in chrome inspect.
         // The code below integrates Stetho into your app. More information here:
         // http://facebook.github.io/stetho/
-        Stetho.initializeWithDefaults(this);
+        /*Stetho.initializeWithDefaults(this);
         new OkHttpClient.Builder()
                 .addNetworkInterceptor(new StethoInterceptor())
-                .build();
+                .build();*/
         //gridView = findViewById(R.id.grid_view_tv);
         ButterKnife.bind(this);
         //default value in shared preferences
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
         final String defaultValue = sharedPreferences.getString("userKey", getString(R.string.default_movie_sort_order));
         if(userSelection == null)
             userSelection = defaultValue;
-        if(savedInstanceState != null){
+        /*if(savedInstanceState != null){
             //Toast.makeText(this, userSelection, Toast.LENGTH_LONG).show();
             if(userSelection.equalsIgnoreCase("favorites")){
                 if(!theFavorites.isEmpty()) theFavorites.clear();
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements
             } else {
                 populateUI();
             }
-        }
+        }*/
         //no internet connection has been found.
         if(!isNetworkConnected()){
             showMessageOnError();//showing message to the user
@@ -191,15 +196,20 @@ public class MainActivity extends AppCompatActivity implements
         CustomArrayAdapter customArrayAdapter = new CustomArrayAdapter(this, imageLinks);
         gridView.setAdapter(customArrayAdapter);
     }
-
+    //Writing lists and settings sort order to bundle
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        //grid view scroll position
+        index = gridView.getFirstVisiblePosition();
+        outState.putInt("index", index);
+        //image links and movies saving on instance state to not query from internet again on screen rotation
         outState.putStringArrayList("imageLinks", imageLinks);
         outState.putParcelableArrayList("theMovies", theMovies);
         //outState.putParcelableArrayList("theFavorites", theFavorites);
         outState.putString("userSelection", userSelection);
     }
+    //Reading from bundle
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -208,8 +218,21 @@ public class MainActivity extends AppCompatActivity implements
         theMovies = savedInstanceState.getParcelableArrayList("theMovies");
         //theFavorites = savedInstanceState.getParcelableArrayList("theFavorites");
         userSelection = savedInstanceState.getString("userSelection");
-        if(!theFavorites.isEmpty()) theFavorites.clear();
-        retrieveDBFavorites();
+        //retrieveDBFavorites();
+        index = savedInstanceState.getInt("index");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(userSelection.equalsIgnoreCase(getString(R.string.pref_user_favorites))){
+            retrieveDBFavorites();//load adapter data first
+            //https://stackoverflow.com/questions/8619794/maintain-scroll-position-of-gridview-through-screen-rotation/8619862
+            gridView.setSelection(index);
+        } else {
+            populateUI();
+            gridView.setSelection(index);
+        }
     }
 
     //onDestroy and unregister MainActivity as a SharedPreferenceChangedListener
@@ -299,6 +322,8 @@ public class MainActivity extends AppCompatActivity implements
     }
     //method that retrieves favorite list from database and sets view adapter for the list
     public void retrieveDBFavorites(){
+        //clear array list before query so prevent double entry.
+        if(!theFavorites.isEmpty()) theFavorites.clear();
         Cursor c = getContentResolver().query(FavoritesContract.FavoritesEntry.CONTENT_URI, null, null, null, null);
 
         if( c != null ){

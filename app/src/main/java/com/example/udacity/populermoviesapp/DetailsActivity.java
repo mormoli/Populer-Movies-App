@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +75,8 @@ public class DetailsActivity extends AppCompatActivity implements VideosAdapter.
     RecyclerView rvRecyclerView;
     @BindView(R.id.button)
     Button button;
+    @BindView(R.id.details_scroll_view)
+    ScrollView detailsScrollView;
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
     private static final String TAG = DetailsActivity.class.getSimpleName();
@@ -85,6 +88,8 @@ public class DetailsActivity extends AppCompatActivity implements VideosAdapter.
     private VideosAdapter videosAdapter;
     private ReviewsAdapter reviewsAdapter;
     private long primaryKey;
+    private String userSelection;
+    private int scrollIndex = 0;
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +100,7 @@ public class DetailsActivity extends AppCompatActivity implements VideosAdapter.
         //videosAdapter = new VideosAdapter(theVideos);
         //Get user selected string from shared preferences
         Intent intent = getIntent();
-        String userSelection = intent.getStringExtra("selection");
+        userSelection = intent.getStringExtra("selection");
         if(userSelection.equalsIgnoreCase(getString(R.string.pref_user_favorites))){
             primaryKey = intent.getIntExtra("favorite", 0);
             movieFromDatabase = getMovieFromDatabase(primaryKey);
@@ -103,15 +108,17 @@ public class DetailsActivity extends AppCompatActivity implements VideosAdapter.
             button.setText(getString(R.string.remove_favorite_button));
             button.setTag(1);
         } else {
+            videosAdapter = new VideosAdapter(theVideos);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            //recyclerView.setAdapter(videosAdapter);
-            //reviewsAdapter = new ReviewsAdapter(theReviews);
+            recyclerView.setAdapter(videosAdapter);
+
+            reviewsAdapter = new ReviewsAdapter(theReviews);
             RecyclerView.LayoutManager rvLayoutManager = new LinearLayoutManager(this);
             rvRecyclerView.setLayoutManager(rvLayoutManager);
             rvRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            //rvRecyclerView.setAdapter(reviewsAdapter);
+            rvRecyclerView.setAdapter(reviewsAdapter);
             //recyclerView.setAdapter(videosAdapter);
             //getting intent values from MainActivity
             movieToShow = intent.getParcelableExtra("movie");
@@ -136,6 +143,121 @@ public class DetailsActivity extends AppCompatActivity implements VideosAdapter.
             }
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(userSelection.equalsIgnoreCase(getString(R.string.pref_user_favorites))){
+            outState.putParcelable("database", movieFromDatabase);
+        } else {
+            outState.putParcelable("internet", movieToShow);
+            outState.putParcelableArrayList("videos", theVideos);
+            outState.putParcelableArrayList("reviews", theReviews);
+            outState.putIntArray("SCROLL_POSITION",
+                    new int[]{ detailsScrollView.getScrollX(), detailsScrollView.getScrollY()});
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null){
+            if(userSelection.equalsIgnoreCase(getString(R.string.pref_user_favorites))){
+                movieFromDatabase = savedInstanceState.getParcelable("database");
+            } else {
+                movieToShow = savedInstanceState.getParcelable("internet");
+                theVideos = savedInstanceState.getParcelableArrayList("videos");
+                theReviews = savedInstanceState.getParcelableArrayList("reviews");
+            }
+            handleScreenRotationChange();
+            //https://asishinwp.wordpress.com/2013/04/15/save-scrollview-position-resume-scrollview-from-that-position/
+            final int[] position = savedInstanceState.getIntArray("SCROLL_POSITION");
+            if(position != null)
+                detailsScrollView.post(new Runnable() {
+                    public void run() {
+                        detailsScrollView.scrollTo(position[0], position[1]);
+                    }
+                });
+        }
+    }
+
+    public void handleScreenRotationChange(){
+        //Log.d(TAG, "onRestoreInstanceState called!");
+        if(movieFromDatabase != null){
+            populateUI();
+        } else {
+            overviewText.setText(movieToShow.getOverview());
+            releaseDateText.setText(movieToShow.getReleaseDate());
+            //loading images in to image view with picasso
+            Picasso.get()
+                    .load(movieToShow.getPosterPath())
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.error)
+                    .into(posterImage);
+            originalTitle.setText(movieToShow.getOriginalTitle());
+            String vote = Float.toString(movieToShow.getVoteAvarage());
+            voteAvarageText.setText(vote);
+
+            if(theVideos.isEmpty()){//if no video link returned turn visibility off
+                trailersLabel.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                dividerItem.setVisibility(View.GONE);
+            } else {
+                videosAdapter = new VideosAdapter(theVideos);
+                recyclerView.setAdapter(videosAdapter);
+                //videosAdapter.notifyDataSetChanged();
+            }
+
+            if(theReviews.isEmpty()){//if no reviews retrieved set visibility off
+                reviewsLabel.setVisibility(View.GONE);
+                rvRecyclerView.setVisibility(View.GONE);
+            } else {
+                reviewsAdapter = new ReviewsAdapter(theReviews);
+                rvRecyclerView.setAdapter(reviewsAdapter);
+                //reviewsAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        if(movieFromDatabase != null){
+            populateUI();
+        } else {
+            overviewText.setText(movieToShow.getOverview());
+            releaseDateText.setText(movieToShow.getReleaseDate());
+            //loading images in to image view with picasso
+            Picasso.get()
+                    .load(movieToShow.getPosterPath())
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.error)
+                    .into(posterImage);
+            originalTitle.setText(movieToShow.getOriginalTitle());
+            String vote = Float.toString(movieToShow.getVoteAvarage());
+            voteAvarageText.setText(vote);
+
+            if(theVideos.isEmpty()){//if no video link returned turn visibility off
+                trailersLabel.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                dividerItem.setVisibility(View.GONE);
+            } else {
+                videosAdapter = new VideosAdapter(theVideos);
+                recyclerView.setAdapter(videosAdapter);
+                //videosAdapter.notifyDataSetChanged();
+            }
+
+            if(theReviews.isEmpty()){//if no reviews retrieved set visibility off
+                reviewsLabel.setVisibility(View.GONE);
+                rvRecyclerView.setVisibility(View.GONE);
+            } else {
+                reviewsAdapter = new ReviewsAdapter(theReviews);
+                rvRecyclerView.setAdapter(reviewsAdapter);
+                //reviewsAdapter.notifyDataSetChanged();
+            }
+        }
+    }*/
+
     //method that retrieves favorite movie from database by given movie id in other word its primary key in database.
     public Favorites getMovieFromDatabase(long movieId){
         Cursor c = getContentResolver().query(FavoritesContract.FavoritesEntry.buildFavoritesUri(movieId), null, null, null, null);
@@ -289,12 +411,16 @@ public class DetailsActivity extends AppCompatActivity implements VideosAdapter.
             @Override
             public void onResponse(Call<TheVideoList> call, Response<TheVideoList> response) {
                 theVideos = response.body().getResults();
-                videosAdapter = new VideosAdapter(theVideos);
-                recyclerView.setAdapter(videosAdapter);
+                //videosAdapter = new VideosAdapter(theVideos);
+                //recyclerView.setAdapter(videosAdapter);
                 if(theVideos.isEmpty()){//if no video link returned turn visibility off
                     trailersLabel.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
                     dividerItem.setVisibility(View.GONE);
+                } else {
+                    videosAdapter = new VideosAdapter(theVideos);
+                    recyclerView.setAdapter(videosAdapter);
+                    //videosAdapter.notifyDataSetChanged();
                 }
                 //videosAdapter.notifyDataSetChanged();
                 //recyclerView.setAdapter(videosAdapter);
@@ -336,11 +462,15 @@ public class DetailsActivity extends AppCompatActivity implements VideosAdapter.
             public void onResponse(Call<TheReviewList> call, Response<TheReviewList> response) {
                 theReviews = response.body().getResults();
                 //reviewsAdapter.notifyDataSetChanged();
-                reviewsAdapter = new ReviewsAdapter(theReviews);
-                rvRecyclerView.setAdapter(reviewsAdapter);
+                //reviewsAdapter = new ReviewsAdapter(theReviews);
+                //rvRecyclerView.setAdapter(reviewsAdapter);
                 if(theReviews.isEmpty()){//if no reviews retrieved set visibility off
                     reviewsLabel.setVisibility(View.GONE);
                     rvRecyclerView.setVisibility(View.GONE);
+                } else {
+                    reviewsAdapter = new ReviewsAdapter(theReviews);
+                    rvRecyclerView.setAdapter(reviewsAdapter);
+                    //reviewsAdapter.notifyDataSetChanged();
                 }
                 //Log.d(TAG, theReviews.toString());
             }
